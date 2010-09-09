@@ -1,6 +1,7 @@
 package Catalyst::TraitFor::Model::DBIC::Schema::QueryLog::AdoptPlack;
 our $VERSION = "0.01";
 
+use 5.008;
 use namespace::autoclean;
 use Moose::Role;
 use Carp::Clan '^Catalyst::Model::DBIC::Schema';
@@ -34,8 +35,6 @@ sub _build_querylog_analyzer {
 sub build_per_context_instance {
     my ( $self, $ctx ) = @_;
 
-    ## Needs to better handle the 'pass through from conf option, and if
-    ## there is not engine, such as when you are doing commandline stuff
     if(defined $ctx->engine->env) {
         my $querylog = $ctx->engine->env->{'plack.middleware.debug.dbic.querylog'} ||
           $self->querylog || DBIx::Class::QueryLog->new($self->querylog_args);
@@ -74,6 +73,11 @@ created L<DBIx::Class::QueryLog> and logs SQL for a given request cycle.  It is
 intended to be compatible with L<Catalyst::TraitFor::Model::DBIC::Schema::QueryLog>
 which you may already be using.
 
+It picks up the querylog from C<< $env->{'plack.middleware.debug.dbic.querylog'} >>
+which is generally provided by the L<Plack> middleware L<Plack::Middleware::Debug::DBIC::QueryLog>
+In fact you will probably use these two modules together.  Please see the documentation
+in L<Plack::Middleware::Debug::DBIC::QueryLog> for an example.
+
 =head1 OPTIONS
 
 This model defines the following options.
@@ -88,11 +92,12 @@ needs.
 
 =head2 querylog_args
 
-Takes a HashRef which is passed to L<DBIx::Class::QueryLog> at construction, 
+Takes a HashRef which is passed to L<DBIx::Class::QueryLog> at construction,
 if needed.
 
 =head1 SEE ALSO
 
+L<Plack::Middleware::Debug::DBIC::QueryLog>,
 L<Catalyst::TraitFor::Model::DBIC::Schema::QueryLog>, L<Catalyst::Model::DBIC::Schema>,
 L<Plack::Middleware::Debug>
 
