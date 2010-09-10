@@ -1,4 +1,8 @@
 Revision history for Perl extension Catalyst::TraitFor::Model::DBIC::Schema::QueryLog::AdoptPlack
 
-0.01    9 September 2010
+0.02    10 September 2010
+        - Added missing dependency
+        - better acknowledgement of stolen code :)
+
+0.01    09 September 2010
         - First release, buyer beware.

@@ -1,5 +1,5 @@
 package Catalyst::TraitFor::Model::DBIC::Schema::QueryLog::AdoptPlack;
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 use 5.008;
 use namespace::autoclean;
@@ -100,6 +100,11 @@ if needed.
 L<Plack::Middleware::Debug::DBIC::QueryLog>,
 L<Catalyst::TraitFor::Model::DBIC::Schema::QueryLog>, L<Catalyst::Model::DBIC::Schema>,
 L<Plack::Middleware::Debug>
+
+=head1 ACKNOWLEGEMENTS
+
+This code is basically copied from L<Catalyst::TraitFor::Model::DBIC::Schema::QueryLog>
+and the author owes a debt of gratitude for the original authors.
 
 =head1 AUTHOR
 

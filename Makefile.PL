@@ -9,6 +9,7 @@ requires 'Plack::Middleware::Debug';
 requires 'Carp::Clan';
 requires 'DBIx::Class::QueryLog';
 requires 'DBIx::Class::QueryLog::Analyzer';
+requires 'Catalyst::Component::InstancePerContext';
 
 build_requires 'Test::More' => '0.96';
 
