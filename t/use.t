@@ -1,7 +1,8 @@
 use strict;
-use warnings;
-use Test::More;
+use warnings FATAL => 'all';
+use Test::More tests => 1;
 
-use_ok 'Catalyst::TraitFor::Model::DBIC::Schema::QueryLog::AdoptPlack';
+BEGIN {
+  use_ok 'Catalyst::TraitFor::Model::DBIC::Schema::QueryLog::AdoptPlack';
+}
 
-done_testing;
