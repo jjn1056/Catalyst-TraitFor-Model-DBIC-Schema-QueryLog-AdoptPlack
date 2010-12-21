@@ -5,34 +5,27 @@ use 5.008;
 use namespace::autoclean;
 use Moose::Role;
 use Carp::Clan '^Catalyst::Model::DBIC::Schema';
-use DBIx::Class::QueryLog::Analyzer;
-
 with 'Catalyst::Component::InstancePerContext';
+requires 'storage';
 
-sub PSGI_KEY { 'plack.middleware.dbic.querylog' }
-
-sub create_querylog_analyzer_for {
-  my ($self, $querylog) = @_;
-  DBIx::Class::QueryLog::Analyzer
-    ->new({querylog => $querylog});
+sub get_querylog_from_env {
+  my ($self, $env) = @_;
+  return $env->{'plack.middleware.debug.dbic.querylog'} ||
+    $env->{'plack.middleware.dbic.querylog'};
 }
 
 sub build_per_context_instance {
   my ( $self, $ctx ) = @_;
   if(defined $ctx->engine->env) {
-
-    my $querylog = do {
-      $ctx->engine->env->{'plack.middleware.debug.dbic.querylog'} ||
-      $ctx->engine->env->{'plack.middleware.dbic.querylog'} ||
+    my $querylog = $self->get_querylog_from_env($ctx->engine->env) ||
       die "Cannot find a querylog instance in the plack env";
-    };
 
-    for my $storage ($self->schema->storage) {
-      $storage->debugobj($querylog);
-      $storage->debug(1);
-    }
-
+    $self->storage->debugobj($querylog);
+    $self->storage->debug(1);
     return $self;
+  } else {
+      die "Not a Plack Engine or compatible interface!";
+  }
 }
 
 1;
@@ -79,7 +72,7 @@ L<Plack::Middleware::Debug>
 
 =head1 ACKNOWLEGEMENTS
 
-This code is basically copied from L<Catalyst::TraitFor::Model::DBIC::Schema::QueryLog>
+This code inspired from L<Catalyst::TraitFor::Model::DBIC::Schema::QueryLog>
 and the author owes a debt of gratitude for the original authors.
 
 =head1 AUTHOR
