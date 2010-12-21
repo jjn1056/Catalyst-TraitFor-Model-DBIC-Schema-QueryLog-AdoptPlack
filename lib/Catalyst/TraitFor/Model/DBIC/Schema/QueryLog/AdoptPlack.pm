@@ -16,12 +16,12 @@ sub get_querylog_from_env {
 
 sub build_per_context_instance {
   my ( $self, $ctx ) = @_;
-  if(my $env = $ctx->engine->can('env')) {
-    my $querylog = $self->get_querylog_from_env($env->()) ||
-      die "Cannot find a querylog instance in the plack env";
-
-    $self->storage->debugobj($querylog);
-    $self->storage->debug(1);
+  if($ctx->engine->can('env')) {
+    my $env = $ctx->engine->env;
+    if(my $querylog = $self->get_querylog_from_env($env)) {
+      $self->storage->debugobj($querylog);
+      $self->storage->debug(1);
+    }
     return $self;
   } else {
       die "Not a Plack Engine or compatible interface!";
