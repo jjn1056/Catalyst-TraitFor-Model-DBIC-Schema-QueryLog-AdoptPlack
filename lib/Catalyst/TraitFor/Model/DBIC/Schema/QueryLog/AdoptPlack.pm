@@ -1,11 +1,11 @@
 package Catalyst::TraitFor::Model::DBIC::Schema::QueryLog::AdoptPlack;
-our $VERSION = "0.03";
+our $VERSION = "0.04";
 
-use 5.008;
-use namespace::autoclean;
+use 5.008004;
 use Moose::Role;
-use Carp::Clan '^Catalyst::Model::DBIC::Schema';
+
 with 'Catalyst::Component::InstancePerContext';
+
 requires 'storage';
 
 sub get_querylog_from_env {
@@ -34,7 +34,7 @@ sub build_per_context_instance {
 
 Catalyst::TraitFor::Model::DBIC::Schema::QueryLog::AdoptPlack - Use a Plack Middleware QueryLog
 
-=head2 SYNOPSIS
+=head1 SYNOPSIS
 
     package MyApp::Web::Model::Schema;
     use parent 'Catalyst::Model::DBIC::Schema';
@@ -60,14 +60,15 @@ in L<Plack::Middleware::Debug::DBIC::QueryLog> for an example.
 
 PLEASE NOTE: Starting with the 0.04 version of L<Plack::Middleware::Debug::DBIC::QueryLog>
 we will canonicalize on C<< $env->{'plack.middleware.dbic.querylog'} >>.  For now
-both aobve keys will work, but within a release or two the older key will warn and
+both listed keys will work, but within a release or two the older key will warn and
 prompt you to upgrade your version of L<Plack::Middleware::Debug::DBIC::QueryLog>.
 Sorry for the trouble.
 
 =head1 SEE ALSO
 
 L<Plack::Middleware::Debug::DBIC::QueryLog>,
-L<Catalyst::TraitFor::Model::DBIC::Schema::QueryLog>, L<Catalyst::Model::DBIC::Schema>,
+L<Catalyst::TraitFor::Model::DBIC::Schema::QueryLog>,
+L<Catalyst::Model::DBIC::Schema>,
 L<Plack::Middleware::Debug>
 
 =head1 ACKNOWLEGEMENTS
