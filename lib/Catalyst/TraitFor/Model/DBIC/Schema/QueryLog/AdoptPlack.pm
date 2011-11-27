@@ -1,8 +1,9 @@
 package Catalyst::TraitFor::Model::DBIC::Schema::QueryLog::AdoptPlack;
-our $VERSION = "0.04";
+our $VERSION = "0.05";
 
 use 5.008004;
 use Moose::Role;
+use Plack::Middleware::DBIC::QueryLog;
 
 with 'Catalyst::Component::InstancePerContext';
 
@@ -10,8 +11,7 @@ requires 'storage';
 
 sub get_querylog_from_env {
   my ($self, $env) = @_;
-  return $env->{'plack.middleware.debug.dbic.querylog'} ||
-    $env->{'plack.middleware.dbic.querylog'};
+  return Plack::Middleware::DBIC::QueryLog->get_querylog_from_env($env);
 }
 
 sub build_per_context_instance {
@@ -82,7 +82,7 @@ John Napiorkowski, C<< <jjnapiork@cpan.org> >>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2010, John Napiorkowski
+Copyright 2011, John Napiorkowski
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -1,5 +1,9 @@
 Revision history for Perl extension Catalyst::TraitFor::Model::DBIC::Schema::QueryLog::AdoptPlack
 
+0.05    26 November 2011
+        - switch to Maker
+        - use the Plack::Middleware::DBIC::QueryLog interface
+
 0.04    22 Decemner 2010
         - simplify dependency requirements a bit
         - more explicit version requirements in the Makefile.PL
