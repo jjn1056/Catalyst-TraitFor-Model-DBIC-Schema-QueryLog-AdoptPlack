@@ -1,5 +1,14 @@
 Revision history for Perl extension Catalyst::TraitFor::Model::DBIC::Schema::QueryLog::AdoptPlack
 
+0.07    28 February 2012
+        - only show the 'missing querylog object' error once
+        - don't die if called in class context
+
+0.06    06 February 2012
+        - make compatible with newer catalyst (env now on request object)
+        - code refactor
+        - copyright update
+
 0.05    26 November 2011
         - switch to Maker
         - use the Plack::Middleware::DBIC::QueryLog interface

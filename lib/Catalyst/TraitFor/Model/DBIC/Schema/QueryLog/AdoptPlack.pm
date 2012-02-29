@@ -1,31 +1,66 @@
 package Catalyst::TraitFor::Model::DBIC::Schema::QueryLog::AdoptPlack;
-our $VERSION = "0.05";
+our $VERSION = "0.07";
 
 use 5.008004;
 use Moose::Role;
 use Plack::Middleware::DBIC::QueryLog;
+use Scalar::Util 'blessed';
 
 with 'Catalyst::Component::InstancePerContext';
 
 requires 'storage';
+
+has show_missing_ql_warning => (is=>'rw', default=>1);
 
 sub get_querylog_from_env {
   my ($self, $env) = @_;
   return Plack::Middleware::DBIC::QueryLog->get_querylog_from_env($env);
 }
 
+sub infer_env_from {
+  my ($self, $ctx) = @_;
+  if($ctx->engine->can('env')) {
+    return $ctx->engine->env;
+  } elsif($ctx->request->can('env')) {
+    return $ctx->request->env;
+  } else { return }
+}
+
+sub enable_dbic_querylogging {
+  my ($self, $querylog) = @_;
+  $self->storage->debugobj($querylog);
+  $self->storage->debug(1);
+}
+
+sub die_missing_querylog {
+  shift->show_missing_ql_warning(0);
+  die <<DEAD;
+You asked me to querylog DBIC, but there is no querylog object in the Plack
+\$env. You probably forgot to enable Plack::Middleware::Debug::DBIC::QueryLog
+in your debugging panel.
+DEAD
+}
+
+sub die_not_plack {
+  die "Not a Plack Engine or compatible interface!"
+}
+
 sub build_per_context_instance {
   my ( $self, $ctx ) = @_;
-  if($ctx->engine->can('env')) {
-    my $env = $ctx->engine->env;
+  return $self unless blessed($ctx);
+
+  if(my $env = $self->infer_env_from($ctx)) {
     if(my $querylog = $self->get_querylog_from_env($env)) {
-      $self->storage->debugobj($querylog);
-      $self->storage->debug(1);
+      $self->enable_dbic_querylogging($querylog);
+    } else {
+      $self->die_missing_querylog() if
+        $self->show_missing_ql_warning;
     }
-    return $self;
   } else {
-      die "Not a Plack Engine or compatible interface!";
+    die_not_plack();
   }
+
+  return $self;
 }
 
 1;
@@ -82,7 +117,7 @@ John Napiorkowski, C<< <jjnapiork@cpan.org> >>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2011, John Napiorkowski
+Copyright 2012, John Napiorkowski
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
