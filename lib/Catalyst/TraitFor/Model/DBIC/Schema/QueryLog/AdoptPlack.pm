@@ -28,8 +28,9 @@ sub infer_env_from {
 
 sub enable_dbic_querylogging {
   my ($self, $querylog) = @_;
-  $self->storage->debugobj($querylog);
-  $self->storage->debug(1);
+  my $clone = $self->clone;
+  $clone->storage->debugobj($querylog);
+  $clone->storage->debug(1);
 }
 
 sub die_missing_querylog {
